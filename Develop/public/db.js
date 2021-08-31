@@ -1,7 +1,7 @@
 let db;
-let workoutVersion;
-// Create a new db request for a "workout" database.
-const request = indexedDB.open("workout", workoutVersion || 21);
+let budgetVersion;
+// Create a new db request for a "budget" database.
+const request = indexedDB.open("budgetDB", budgetVersion || 21);
 request.onupgradeneeded = function (e) {
   console.log("Upgrade needed in IndexDB");
   const { oldVersion } = e;
@@ -9,7 +9,7 @@ request.onupgradeneeded = function (e) {
   console.log(`DB Updated from version ${oldVersion} to ${newVersion}`);
   db = e.target.result;
   if (db.objectStoreNames.length === 0) {
-    db.createObjectStore("workoutStore", { autoIncrement: true });
+    db.createObjectStore("budgetStore", { autoIncrement: true });
   }
 };
 request.onerror = function (e) {
@@ -17,10 +17,10 @@ request.onerror = function (e) {
 };
 function checkDatabase() {
   console.log("check db invoked");
-  // Open a transaction on your workoutStore db
-  let transaction = db.transaction(["workoutStore"], "readwrite");
-  // access your workoutStore object
-  const store = transaction.objectStore("workoutStore");
+  // Open a transaction on your budgetStore db
+  let transaction = db.transaction(["budgetStore"], "readwrite");
+  // access your budgetStore object
+  const store = transaction.objectStore("budgetStore");
   // Get all records from store and set to a variable
   const getAll = store.getAll();
   // If the request was successful
@@ -39,10 +39,10 @@ function checkDatabase() {
         .then((res) => {
           // If our returned response is not empty
           if (res.length !== 0) {
-            // Open another transaction to workoutStore with the ability to read and write
-            transaction = db.transaction(["workoutStore"], "readwrite");
+            // Open another transaction to budgetStore with the ability to read and write
+            transaction = db.transaction(["budgetStore"], "readwrite");
             // Assign the current store to a variable
-            const currentStore = transaction.objectStore("workoutStore");
+            const currentStore = transaction.objectStore("budgetStore");
             // Clear existing entries because our bulk add was successful
             currentStore.clear();
             console.log("Clearing store :broom:");
@@ -62,10 +62,10 @@ request.onsuccess = function (e) {
 };
 const saveRecord = (record) => {
   console.log("Save record invoked");
-  // Create a transaction on the workoutStore db with readwrite access
-  const transaction = db.transaction(["workoutStore"], "readwrite");
-  // Access your workoutStore object store
-  const store = transaction.objectStore("workoutStore");
+  // Create a transaction on the budgetStore db with readwrite access
+  const transaction = db.transaction(["budgetStore"], "readwrite");
+  // Access your budgetStore object store
+  const store = transaction.objectStore("budgetStore");
   // Add record to your store with add method.
   store.add(record);
 };
